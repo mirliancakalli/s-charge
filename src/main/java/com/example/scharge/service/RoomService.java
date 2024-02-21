@@ -35,7 +35,7 @@ public class RoomService {
 
     public RoomDTO bookRoom(RoomDTO roomDTO) {
         Room bookedRoom = roomRepository.save(convertToEntity(roomDTO));
-        //since filtered throw available rooms i am skipping a check to see if room is free or not.
+        //since filtered through available rooms I am skipping a check to see if room is free or not.
         logger.info("room with id: "+bookedRoom.getId()+", booked!");
         return convertToDTO(bookedRoom);
     }
