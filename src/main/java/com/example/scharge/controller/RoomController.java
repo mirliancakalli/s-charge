@@ -2,6 +2,10 @@ package com.example.scharge.controller;
 
 import com.example.scharge.dto.RoomDTO;
 import com.example.scharge.service.RoomService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Tag(name = "Room", description = "Room Reservation Api")
 @RestController
 @RequestMapping("/api/rooms")
 public class RoomController {
@@ -34,6 +39,12 @@ public class RoomController {
         return ResponseEntity.ok(availableRooms);
     }
 
+    @Operation(
+            summary = "Book a room",
+            description = "Book one of the available rooms.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "successful creation")
+    })
     @PostMapping("/book")
     public ResponseEntity<RoomDTO> bookRoom(@Valid @RequestBody RoomDTO roomDTO) {
         RoomDTO bookedRoom = roomService.bookRoom(roomDTO);
