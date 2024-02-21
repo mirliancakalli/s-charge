@@ -1,0 +1,32 @@
+<configuration>
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <Target>System.out</Target>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} [%line] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="myappender" class="ch.qos.logback.core.rolling.RollingFileAppender" >
+        <file>log/room.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>log/room.%d{yyyy-MM-dd}.log</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d %5p %t %-20.30c{1}:%L |%X{sessionidlog}|%X{usernamelog}|%X{idlog}|%m%n</pattern>
+        </encoder>
+    </appender>
+
+
+    <root level="ERROR">
+        <appender-ref ref="myappender"/>
+    </root>
+
+    <logger name="com.example" >
+        <level value="DEBUG"/>
+        <appender-ref ref="myappender"/>
+    </logger>
+
+    <logger name="org.springframework" level="INFO" />
+
+</configuration>

@@ -10,11 +10,14 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class RoomService {
+
+    private static final Logger logger = LoggerFactory.getLogger(RoomService.class);
 
     private final RoomRepository roomRepository;
 
@@ -33,13 +36,14 @@ public class RoomService {
     public RoomDTO bookRoom(RoomDTO roomDTO) {
         Room bookedRoom = roomRepository.save(convertToEntity(roomDTO));
         //since filtered throw available rooms i am skipping a check to see if room is free or not.
+        logger.info("room with id: "+bookedRoom.getId()+", booked!");
         return convertToDTO(bookedRoom);
     }
 
     public void cancelBooking(Long roomId) {
         Room roomToCancel = roomRepository.findById(roomId)
                 .orElseThrow(() -> new BookingException("Room not found for cancellation"));
-
+        logger.info("room with id: "+roomToCancel.getId()+", canceled!");
         roomToCancel.setCanceled(true);
         roomRepository.save(roomToCancel);
     }
