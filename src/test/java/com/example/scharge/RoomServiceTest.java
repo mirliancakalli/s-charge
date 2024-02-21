@@ -27,18 +27,27 @@ public class RoomServiceTest {
 
     @Test
     public void testListAvailableRooms() {
-        when(roomRepository.findAvailableRooms(any(BigDecimal.class), any(LocalDateTime.class), any(LocalDateTime.class)))
+        when(roomRepository.findAvailableRooms(any(BigDecimal.class), any(LocalDateTime.class), any(LocalDateTime.class),  any(Boolean.class)))
                 .thenReturn(Collections.emptyList());
 
-        List<RoomDTO> availableRooms = roomService.listAvailableRooms(BigDecimal.TEN, LocalDateTime.now(), LocalDateTime.now().plusHours(1));
+        List<RoomDTO> availableRooms = roomService.listAvailableRooms(BigDecimal.TEN, LocalDateTime.now(), LocalDateTime.now().plusHours(1), false);
         assertThat(availableRooms).isEmpty();
     }
 
     @Test
     public void testBookRoom() {
-        when(roomRepository.save(any(Room.class))).thenReturn(new Room());
+        RoomDTO roomDTO = new RoomDTO();
+        roomDTO.setRoomNumber("123");
+        roomDTO.setBooked(false);
 
-        RoomDTO bookedRoom = roomService.bookRoom(new RoomDTO());
+        Room roomEntity = new Room();
+        roomEntity.setRoomNumber("123");
+        roomEntity.setBooked(false);
+
+        when(roomRepository.findByRoomNumber("123")).thenReturn(roomEntity);
+        when(roomRepository.save(any(Room.class))).thenReturn(roomEntity);
+
+        RoomDTO bookedRoom = roomService.bookRoom(roomDTO);
         assertThat(bookedRoom).isNotNull();
     }
 }

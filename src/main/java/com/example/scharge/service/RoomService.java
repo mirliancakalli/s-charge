@@ -26,25 +26,33 @@ public class RoomService {
         this.roomRepository = roomRepository;
     }
 
-    public List<RoomDTO> listAvailableRooms(BigDecimal maxPrice, LocalDateTime startTime, LocalDateTime endTime) {
-        List<Room> availableRooms = roomRepository.findAvailableRooms(maxPrice, startTime, endTime);
+    public List<RoomDTO> listAvailableRooms(BigDecimal maxPrice, LocalDateTime startTime, LocalDateTime endTime,boolean isBooked) {
+        List<Room> availableRooms = roomRepository.findAvailableRooms(maxPrice, startTime, endTime, isBooked);
         return availableRooms.stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
     public RoomDTO bookRoom(RoomDTO roomDTO) {
+        Room room = roomRepository.findByRoomNumber(roomDTO.getRoomNumber());
+
+        if (room != null && room.isBooked()){
+            throw new BookingException("Room is already booked!");
+        }
+
         Room bookedRoom = roomRepository.save(convertToEntity(roomDTO));
-        //since filtered through available rooms I am skipping a check to see if room is free or not.
-        logger.info("room with id: "+bookedRoom.getId()+", booked!");
+        logger.info("room with id: "+bookedRoom.getRoomNumber()+", booked!");
         return convertToDTO(bookedRoom);
     }
 
-    public void cancelBooking(Long roomId) {
-        Room roomToCancel = roomRepository.findById(roomId)
-                .orElseThrow(() -> new BookingException("Room not found for cancellation"));
-        logger.info("room with id: "+roomToCancel.getId()+", canceled!");
-        roomToCancel.setCanceled(true);
+    public void cancelBooking(String roomId) {
+        Room roomToCancel = roomRepository.findByRoomNumber(roomId);
+
+        if (!roomToCancel.isBooked()){
+            throw new BookingException("Room is already free!");
+        }
+
+        logger.info("room with id: "+roomId+", canceled!");
         roomRepository.save(roomToCancel);
     }
 

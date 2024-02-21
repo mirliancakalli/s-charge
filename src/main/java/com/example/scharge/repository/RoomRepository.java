@@ -12,12 +12,13 @@ import java.util.List;
 public interface RoomRepository extends JpaRepository<Room,Long> {
     @Query("SELECT r FROM Room r " +
             "WHERE (r.bookedStartTime IS NULL OR r.bookedStartTime > :endTime OR r.bookedEndTime < :startTime) " +
-            "AND (:maxPrice IS NULL OR r.price <= :maxPrice)")
+            "AND (:maxPrice IS NULL OR r.price <= :maxPrice)" +
+            "AND r.booked = :isBooked")
     List<Room> findAvailableRooms(
             @Param("maxPrice") BigDecimal maxPrice,
             @Param("startTime") LocalDateTime startTime,
-            @Param("endTime") LocalDateTime endTime
-    );
+            @Param("endTime") LocalDateTime endTime,
+            boolean isBooked);
 
     @Query("SELECT r FROM Room r " +
             "WHERE (:startTime IS NULL OR r.bookedEndTime >= :startTime) " +
@@ -31,5 +32,7 @@ public interface RoomRepository extends JpaRepository<Room,Long> {
             @Param("maxPrice") BigDecimal maxPrice
     );
 
+
+    Room findByRoomNumber(String roomNumber);
 
 }

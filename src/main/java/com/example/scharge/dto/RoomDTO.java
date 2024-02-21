@@ -22,6 +22,7 @@ public class RoomDTO {
     private BigDecimal price;
     private LocalDateTime bookedStartTime;
     private LocalDateTime bookedEndTime;
+    private boolean booked;
     private boolean canceled;
 
     public RoomDTO(Long id, String roomNumber, BigDecimal price, LocalDateTime bookedStartTime, LocalDateTime bookedEndTime) {

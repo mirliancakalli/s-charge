@@ -22,7 +22,7 @@ public class Room {
     private BigDecimal price;
     private LocalDateTime bookedStartTime;
     private LocalDateTime bookedEndTime;
-    private boolean canceled;
+    private boolean booked;
 
     public Room(String roomNumber, BigDecimal price, LocalDateTime bookedStartTime, LocalDateTime bookedEndTime) {
         this.roomNumber = roomNumber;

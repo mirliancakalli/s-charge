@@ -24,12 +24,13 @@ public class RoomController {
     }
 
     @GetMapping
-    public ResponseEntity<List<RoomDTO>> listAvailableRooms(
+    public ResponseEntity<List<RoomDTO>> rooms(
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(required = false) LocalDateTime startTime,
-            @RequestParam(required = false) LocalDateTime endTime) {
+            @RequestParam(required = false) LocalDateTime endTime,
+            @RequestParam(required = false) boolean isBooked) {
 
-        List<RoomDTO> availableRooms = roomService.listAvailableRooms(maxPrice, startTime, endTime);
+        List<RoomDTO> availableRooms = roomService.listAvailableRooms(maxPrice, startTime, endTime,isBooked);
         return ResponseEntity.ok(availableRooms);
     }
 
@@ -40,7 +41,7 @@ public class RoomController {
     }
 
     @DeleteMapping("/cancel/{roomId}")
-    public ResponseEntity<Void> cancelBooking(@PathVariable Long roomId) {
+    public ResponseEntity<Void> cancelBooking(@PathVariable String roomId) {
         roomService.cancelBooking(roomId);
         return ResponseEntity.noContent().build();
     }

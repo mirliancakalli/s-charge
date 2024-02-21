@@ -28,7 +28,7 @@ public class RoomControllerTest {
 
     @Test
     public void testListAvailableRooms() throws Exception {
-        when(roomService.listAvailableRooms(any(BigDecimal.class), any(LocalDateTime.class), any(LocalDateTime.class)))
+        when(roomService.listAvailableRooms(any(BigDecimal.class), any(LocalDateTime.class), any(LocalDateTime.class),any(Boolean.class)))
                 .thenReturn(Collections.emptyList());
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/rooms")
